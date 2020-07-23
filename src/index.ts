@@ -1,6 +1,6 @@
 import "reflect-metadata";
 import {LogChannel} from "./structs/db/entities/LogChannels";
-import {Connection, createConnection, getConnectionOptions} from "typeorm";
+import {Connection, createConnection, getConnectionOptions, ConnectionOptions} from "typeorm";
 import {Subcommand} from "./structs/db/entities/Subcommands";
 import {CacheProvider} from "./structs/db/CacheProvider";
 import {Benchmark} from "./Benchmark";
@@ -79,7 +79,7 @@ console.log(`2 squared is`, powTwo(2));
   );
 
   // CONNECTIONSi
-  const mainConnection = await createConnection(mainOptions);
+  const mainConnection = await createConnection(mainOptions as ConnectionOptions);
 
 
   console.log(`Create bruh LogChannel`, lBr);
