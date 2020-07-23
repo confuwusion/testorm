@@ -22,70 +22,12 @@ console.log(`2 squared is`, powTwo(2));
 
 (async function() {
 
-  // const { cache } = await initiateManager();
-
-  const opts = [ {
-    name: `main`,
-    type: `sqlite`,
-    database: `./data/main.sql`,
-    synchronize: true,
-    logging: false,
-    cache: true,
-    migrations: [
-      `src/migration/**/*.ts`
-    ],
-    subscribers: [
-      `src/subscriber/**/*.ts`
-    ],
-    cli: {
-      migrationsDir: `src/migration`,
-      subscribersDir: `src/subscriber`
-    }
-  }, {
-    name: `cache`,
-    type: `sqlite`,
-    database: `:memory:`,
-    synchronize: true,
-    logging: false,
-    cache: true,
-    migrations: [
-      `src/migration/**/*.ts`
-    ],
-    subscribers: [
-      `src/subscriber/**/*.ts`
-    ],
-    cli: {
-      migrationsDir: `src/migration`,
-      subscribersDir: `src/subscriber`
-    }
-  } ];
-
-  const connectionOptions = {
-    cache: {
-      duration: 0
-
-      /* provider(connection: Connection) {
-        return new CacheProvider(connection);
-      } */
-    },
-    entities: [
-      LogChannel.Entity
-    ]
-  };
-
-  const mainOptions = Object.assign(
-    opts[0],
-    connectionOptions
-  );
-
-  // CONNECTIONSi
-  const mainConnection = await createConnection(mainOptions as ConnectionOptions);
-
+  const { cache } = await initiateManager();
 
   console.log(`Create bruh LogChannel`, lBr);
   const modChannel = new LogChannel(`bruh`, `49398393`);
 
-  const logRepo = mainConnection.getRepository(LogChannel.Entity);
+  const logRepo = cache.LogChannels;
 
   // console.log(`Log repository metadata`, logRepo.metadata);
 

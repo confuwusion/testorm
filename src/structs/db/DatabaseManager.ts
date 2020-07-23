@@ -1,4 +1,4 @@
-import {Repository, Connection, createConnection, getConnectionOptions} from "typeorm";
+import {Repository, Connection, createConnection, getConnectionOptions, ConnectionOptions} from "typeorm";
 import {LogChannel} from "./entities/LogChannels";
 import {CacheManager} from "./CacheHandler";
 
@@ -16,6 +16,43 @@ type EntryCacheInstances = {
 
 export async function initiateManager() {
 
+  const opts = [ {
+    name: `main`,
+    type: `sqlite`,
+    database: `./data/main.sql`,
+    synchronize: true,
+    logging: false,
+    cache: true,
+    migrations: [
+      `src/migration/**/*.ts`
+    ],
+    subscribers: [
+      `src/subscriber/**/*.ts`
+    ],
+    cli: {
+      migrationsDir: `src/migration`,
+      subscribersDir: `src/subscriber`
+    }
+  }, {
+    name: `cache`,
+    type: `sqlite`,
+    database: `:memory:`,
+    synchronize: true,
+    logging: false,
+    cache: true,
+    migrations: [
+      `src/migration/**/*.ts`
+    ],
+    subscribers: [
+      `src/subscriber/**/*.ts`
+    ],
+    cli: {
+      migrationsDir: `src/migration`,
+      subscribersDir: `src/subscriber`
+    }
+  } ];
+
+
   const connectionOptions = {
     cache: {
       duration: 0
@@ -31,18 +68,18 @@ export async function initiateManager() {
 
   // CONNECTION OPTIONS
   const mainOptions = Object.assign(
-    await getConnectionOptions(`main`),
+    opts[0],
     connectionOptions
   );
   const cacheOptions = Object.assign(
-    await getConnectionOptions(`cache`),
+    opts[1],
     connectionOptions
   );
 
   // CONNECTIONS
   const [ mainConnection, cacheConnection ] = await Promise.all([
-    createConnection(mainOptions),
-    createConnection(cacheOptions)
+    createConnection(mainOptions as ConnectionOptions),
+    createConnection(cacheOptions as ConnectionOptions)
   ]);
   const connections = {
     main: mainConnection,
