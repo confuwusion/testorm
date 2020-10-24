@@ -1,3 +1,4 @@
+import { NormalTextColumn } from "@db/lib/ColumnOptions";
 import { DBDeserializers, DBSerializers } from "@db/lib/serialization";
 import { Column, Entity, PrimaryColumn } from "typeorm";
 
@@ -11,31 +12,29 @@ interface Options {
 type OptionKeys = keyof Options;
 
 @Entity()
-class BotOptionEntity<K extends OptionKeys = OptionKeys> {
+class BotOptionEntity<OptionKey extends OptionKeys = OptionKeys> {
 
-  // Search key
-  @PrimaryColumn({ type: `varchar`, length: 255 })
-  readonly option: K;
+  @PrimaryColumn(NormalTextColumn)
+  readonly option: OptionKey;
 
   @Column({
-    type: `varchar`,
-    length: 255,
+    ...NormalTextColumn,
     transformer: {
-      from:DBDeserializers.nullish,
+      from: DBDeserializers.nullish,
       to: DBSerializers.absolute
     }
   })
-  data: Options[K];
+  data: Options[OptionKey];
 
 }
 
-export class BotOption<K extends OptionKeys = OptionKeys> extends BotOptionEntity<K> {
+export class BotOption<OptionKey extends OptionKeys = OptionKeys> extends BotOptionEntity<OptionKey> {
 
   static readonly Entity = BotOptionEntity;
 
   constructor(
-    readonly option: K,
-    public data: Options[K]
+    readonly option: OptionKey,
+    public data: Options[OptionKey]
   ) {
     super();
   }
