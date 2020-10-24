@@ -1,8 +1,8 @@
+import { getTimeAsCode } from "@util/getTimeAsCode";
 import { Column, Entity, PrimaryColumn } from "typeorm";
 
 class ReactionRoleValue {
 
-  // Search key
   @Column()
   readonly messageID: string;
 
@@ -18,6 +18,6 @@ class ReactionRoleValue {
 export class ReactionRole extends ReactionRoleValue {
 
   @PrimaryColumn()
-  readonly code: string = process.hrtime.bigint().toString(36);
+  readonly code: string = getTimeAsCode();
 
 }

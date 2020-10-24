@@ -1,11 +1,11 @@
 import { Column, Entity, PrimaryColumn } from "typeorm";
+import { getTimeAsCode } from "@util/getTimeAsCode";
 
 @Entity()
 class ActionEntity {
 
-  // Search key
   @PrimaryColumn()
-  readonly code: string = process.hrtime.bigint().toString(36);
+  readonly code: string = getTimeAsCode();
 
   @Column()
   readonly name: string;
@@ -27,3 +27,4 @@ export class ActionData extends ActionEntity {
   }
 
 }
+
