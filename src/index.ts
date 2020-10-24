@@ -1,7 +1,7 @@
 import "dotenv";
 import "reflect-metadata";
 
-import { MAIN_CHANNELS } from "@constants";
+import { CHANNELS } from "@constants/Channels";
 import { initiateConnection } from "@db/connection";
 import { DatabaseManager } from "@db/lib/managers/Relational";
 import { LogChannel } from "@entities/LogChannels";
@@ -10,7 +10,7 @@ import { Benchmark } from "@util/Benchmark";
 import { Logger } from "./structs/Logger";
 
 const logger = new Logger(`Database`);
-const modChannel = new LogChannel(`bruh`, MAIN_CHANNELS.MAIN);
+const modChannel = new LogChannel(`bruh`, CHANNELS.MAIN.LOG_SAFE.MOD_TRAINING);
 
 main()
   .catch(console.error);
@@ -42,13 +42,9 @@ async function main(): Promise<void> {
  */
 async function benchmarkQueries(logs: LogChannelManager): Promise<void> {
   await benchmark(`INSERT`, `bruh LogChannel`, insertLogChannel)(logs);
-
   await benchmark(`FIND`, `all LogChannel`, getAllLogChannels)(logs);
-
   await benchmark(`UPDATE`, `bruh LogChannel`, updateLogChannel)(logs);
-
   await benchmark(`FIND`, `bruh LogChannel`, findLogChannel)(logs);
-
   await benchmark(`DELETE`, `bruh LogChannel`, deleteLogChannel)(logs);
 }
 
@@ -93,7 +89,7 @@ async function findLogChannel(logs: LogChannelManager) {
  * @param logs
  */
 async function updateLogChannel(logs: LogChannelManager) {
-  await logs.update({ type: `bruh` }, { channelID: MAIN_CHANNELS.QOTD });
+  await logs.update({ type: `bruh` }, { channelID: CHANNELS.MAIN.LOG_SAFE.MOD_TRAINING });
 }
 
 /**
