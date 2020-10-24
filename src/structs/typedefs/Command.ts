@@ -1,4 +1,4 @@
-import { PERMISSIONS, commandChannels } from "../../constants";
+import { commandChannels, PERMISSIONS } from "@constants";
 import { MessageEmbed } from "discord.js";
 import { titleCase } from "string-fn";
 
@@ -41,39 +41,39 @@ export interface CommandStructure {
   /**
    * Describes what the command does
    **/
-  description: string,
+  description: string;
 
   /**
    * Category the command belongs to
    **/
-  category: Categories,
+  category: Categories;
 
   /**
    * The icon that graphically identifies the command
    **/
-  icon: CommandIcon,
+  icon: CommandIcon;
 
   /**
    * Parameter definitions of the command
    * Provide at least either {@link CommandArguments.blank} or {@link CommandArguments.detectors} with {@link CommandArguments.usage}
    **/
-  args: CommandArguments,
+  args: CommandArguments;
 
   /**
    * Command usability by members in channels
    **/
-  permission?: CommandArgumentPermissions,
+  permission?: CommandArgumentPermissions;
 
   /**
    * Conversion and validation of member arguments
    **/
-  parse(pack: any, pieces: string[]): object,
+  parse: (pack: any, pieces: string[]) => object;
 
   /**
    * Performing the main functionality of the command
    * Note: It doesn't have to be in a single function. You can link multiple functions by calling them in this function
    **/
-  run(pack: any, parsedArgs: object): Promise<Promise<any>[]>
+  run: (pack: any, parsedArgs: object) => Promise<Promise<any>[]>;
 }
 
 interface CommandIcon {
@@ -81,12 +81,12 @@ interface CommandIcon {
   /**
    * The unicode emoji that represents the icon
    **/
-  emoji: string,
+  emoji: string;
 
   /**
    * The twemoji (important) URL that represents the icon
    **/
-  url: string
+  url: string;
 }
 
 interface CommandArguments {
@@ -94,30 +94,30 @@ interface CommandArguments {
   /**
    * Describes what the command does if no arguments were provided by the member
    **/
-  blank?: string,
+  blank?: string;
 
   /**
    * a
    **/
-  details?: string,
+  details?: string;
 
   /**
    * List of regex that represent and break down each parameter.
    * Each array entry represents an individual parameter (in order).
    **/
-  detectors?: RegExp[],
+  detectors?: RegExp[];
 
   /**
    * Hardcoding parameters that can dynamically accept user input.
    * Each array entry represents an individual parameter (in order).
    * Place {[inp]} anywhere inside individual parameter strings to accept user input in that place, for that parameter.
    **/
-  fillers?: string[],
+  fillers?: string[];
 
   /**
    * List of various usage instructions
    **/
-  usage?: CommandArgumentUsage[]
+  usage?: CommandArgumentUsage[];
 }
 
 interface CommandArgumentUsage {
@@ -130,7 +130,7 @@ interface CommandArgumentUsage {
    *     title: "Set a reminder"
    *   ```
    **/
-  title: string,
+  title: string;
 
   /**
    * The parameter structure of this usage
@@ -151,7 +151,7 @@ interface CommandArgumentUsage {
    *   ]
    * ```
    **/
-  parameters: string[]
+  parameters: string[];
 }
 
 interface CommandArgumentPermissions {
@@ -160,7 +160,7 @@ interface CommandArgumentPermissions {
    * Restrict the usage of this command to the selected channels
    * Defaults to false
    **/
-  exclusive?: boolean,
+  exclusive?: boolean;
 
   /**
    * IF exclusive is false:
@@ -168,19 +168,19 @@ interface CommandArgumentPermissions {
    * IF exclusive is true:
    *   Channels the command is meant to be used in
    **/
-  channels?: string[],
+  channels?: string[];
 
   /**
    * The hierarchy required for usage of this command
    * Defaults to the hierarchy provided by the category
    **/
-  hierarchy?: PERMISSIONS.HIERARCHIES,
+  hierarchy?: PERMISSIONS.HIERARCHIES;
 
   /**
    * Selection of hierarchies from the selected hierarchy
    * Defaults to PERMISSIONS.TRENDS.CURRENT_ABOVE
    **/
-  trend: PERMISSIONS.TRENDS
+  trend: PERMISSIONS.TRENDS;
 }
 
 /*
@@ -189,12 +189,17 @@ interface CommandArgumentPermissions {
 export class Command implements CommandStructure {
 
   readonly description: CommandStructure["description"];
+
   readonly category: CommandStructure["category"];
+
   readonly icon: CommandStructure["icon"];
+
   readonly args: CommandStructure["args"];
+
   readonly permission: CommandStructure["permission"];
 
   readonly run: CommandStructure["run"];
+
   readonly parse: CommandStructure["parse"] = function(_p, _i): string[] {
     return _i;
   };
@@ -277,7 +282,7 @@ export class Command implements CommandStructure {
       .setAuthor(titleCase(this.name), this.icon.url);
   }
 
-  extractArgs(content: string): ReadonlyArray<string | ReadonlyArray<string>> {
+  extractArgs(content: string): readonly (string | readonly string[])[] {
     const {
       args: { detectors, fillers = [] }
     } = this;

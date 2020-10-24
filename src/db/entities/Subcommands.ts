@@ -1,12 +1,11 @@
-import {Entity, PrimaryColumn, Column} from "typeorm";
-import {BaseEntry} from "../BaseEntry";
-
-//import {SprikeyClient} from "../../SprikeyClient";
-import {Command} from "../../typedefs/Command";
+import { Command } from "@typedefs/Command";
+import { Column, Entity, PrimaryColumn } from "typeorm";
 
 @Entity()
-class SubcommandEntry extends BaseEntry<SubcommandEntry> {
+class SubcommandEntity {
 
+  // Search key
+  // All entries are fetched in the beginning
   @PrimaryColumn()
   readonly name: string;
 
@@ -30,9 +29,9 @@ class SubcommandEntry extends BaseEntry<SubcommandEntry> {
 
 }
 
-export class Subcommand extends SubcommandEntry {
+export class Subcommand extends SubcommandEntity {
 
-  static entity = SubcommandEntry;
+  static Entity = SubcommandEntity;
 
   constructor(
     inheritor: Command,
@@ -43,8 +42,9 @@ export class Subcommand extends SubcommandEntry {
       trend = inheritor.permission.trend,
       channelIDs = inheritor.permission.channels,
       fillers = inheritor.args.fillers
-    }: SubcommandEntry
+    }: SubcommandEntity
   ) {
+    // @ts-ignore
     super({
       name,
       inherits: inheritor.name,
