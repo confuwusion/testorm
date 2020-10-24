@@ -5,11 +5,9 @@ import { Column, Entity, PrimaryColumn } from "typeorm";
 @Entity()
 class LogChannelEntity {
 
-  // Main search key
   @PrimaryColumn()
   readonly type: string;
 
-  // Search used in case type of provided ID is unknown
   @Column()
   readonly channelID: CHANNELS.LogSafe;
 
@@ -26,10 +24,7 @@ export class LogChannel extends LogChannelEntity {
     super();
   }
 
-  static fromChannel(
-    { id, parentID }: GuildChannel,
-    type: LogChannelEntity["type"]
-  ): LogChannel | Error {
+  static fromChannel({ id, parentID }: GuildChannel, type: LogChannelEntity["type"]): LogChannel | Error {
     const LogSafeCategories = Object.values(CATEGORIES.MAIN.LOG_SAFE) as string[];
 
     return parentID && !LogSafeCategories.includes(parentID)

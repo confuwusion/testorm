@@ -22,8 +22,8 @@ class LockoutEntity {
   removeChannels(...channelIDs: LockoutEntity["channelIDs"]): SplitArrayResult<CHANNELS.Any> {
     const splitResult = this.filterExistingChannels(channelIDs);
 
-    splitResult.accepted.forEach(event => this.channelIDs.splice(
-      this.channelIDs.indexOf(event),
+    splitResult.accepted.forEach(channelID => this.channelIDs.splice(
+      this.channelIDs.indexOf(channelID),
       1
     ));
 

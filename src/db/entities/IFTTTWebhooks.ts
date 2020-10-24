@@ -4,9 +4,10 @@ import { ClientEvents } from "discord.js";
 import { Column, Entity, PrimaryColumn } from "typeorm";
 
 const algorithm = `aes-192-cbc`;
-const password = process.env.DB_ENCRYPTION_TOKEN;
+const password = process.env.DB_WEBHOOK_ENCRYPTION_TOKEN;
 
 if (!password) throw new Error(`No database encryption password was provided!`);
+
 const encryptionKey = crypto.scryptSync(password, `salt`, 24);
 const iv = Buffer.alloc(16, 0);
 
